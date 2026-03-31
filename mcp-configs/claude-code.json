@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "creem": {
+      "command": "npx",
+      "args": ["-y", "--package", "creem", "--", "mcp", "start",
+               "--api-key", "YOUR_CREEM_API_KEY",
+               "--server-index", "1"],
+      "env": {}
+    }
+  }
+}
