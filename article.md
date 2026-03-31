@@ -202,8 +202,6 @@ For Cursor, same format in `.cursor/mcp.json`.
 
 | You say | MCP tool called |
 |---------|----------------|
-| You say | MCP tool called |
-|---------|----------------|
 | "Show me all active subscriptions" | `subscriptions-search-subscriptions` |
 | "Create a 20% discount for the Pro plan" | `discounts-create` |
 | "Generate a checkout link for Enterprise" | `checkouts-create` |
@@ -260,14 +258,14 @@ The wizard maps your products, pricing, and billing periods. No CSV exports, no 
 
 ## When to Use What
 
-| Task | CLI | `--json \| jq` | MCP Agent |
-|------|-----|----------------|-----------|
+| Task | CLI | JSON + jq | MCP Agent |
+|------|-----|-----------|-----------|
 | Quick lookup | `creem subs get id` | — | "Show sub X" |
 | Bulk analysis | — | `jq 'group_by...'` | "Analyze churn" |
 | Shell scripts | `creem txn list` | pipe to jq | — |
 | CI/CD | CLI commands | parse output | — |
-| Checkout links | `creem checkouts create` | `\| jq .url \| pbcopy` | "Create checkout" |
-| Revenue metrics | — | jq math | jq + `transactions-search` |
+| Checkout links | `creem checkouts create` | `jq .url` → pbcopy | "Create checkout" |
+| Revenue metrics | — | jq math | `transactions-search` |
 | Create discounts | — | — | `discounts-create` (MCP-only) |
 | License management | — | — | `licenses-activate/validate` (MCP-only) |
 | Migration | `creem migrate` | `--json > plan.json` | — |

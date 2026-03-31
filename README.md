@@ -71,8 +71,8 @@ cp skill/SKILL.md ~/.claude/skills/creem-cli/SKILL.md
 
 ## Article & Video
 
-- [Read the tutorial](https://dev.to/hennessy811/3-ways-to-control-your-saas-payments-without-opening-a-dashboard)
-- [Watch the demo](https://youtube.com/watch?v=PLACEHOLDER)
+- [Read the tutorial](https://dev.to/hennessy811/3-ways-to-control-your-saas-payments-without-opening-a-dashboard-20o2)
+- [Watch the demo](https://youtu.be/td6hwGfLvxQ)
 
 ## License
 

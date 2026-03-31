@@ -3,8 +3,8 @@
 **What it is:**
 Video + article covering three levels of terminal-based SaaS management with Creem: direct CLI commands, `--json | jq` pipeline scripting, and AI agent integration via MCP server.
 
-**Article:** [TODO: dev.to link]
-**Video:** [TODO: YouTube link]
+**Article:** https://dev.to/hennessy811/3-ways-to-control-your-saas-payments-without-opening-a-dashboard-20o2
+**Video:** https://youtu.be/td6hwGfLvxQ
 
 **What's covered:**
 - Install & config (`brew tap/install`, `creem login`, environment switching)
