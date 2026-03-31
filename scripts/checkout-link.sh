@@ -4,7 +4,7 @@
 PRODUCT=${1:?Usage: checkout-link.sh <product_id> [success_url]}
 SUCCESS_URL=${2:-"https://myapp.com/thanks"}
 
-URL=$(creem checkouts create --product "$PRODUCT" --success-url "$SUCCESS_URL" --json 2>/dev/null | jq -r '.checkoutUrl')
+URL=$(creem checkouts create --product "$PRODUCT" --success-url "$SUCCESS_URL" --json | jq -r '.checkoutUrl')
 echo "$URL"
 
 # Copy to clipboard (macOS)

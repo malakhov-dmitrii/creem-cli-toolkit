@@ -86,7 +86,7 @@ Every command supports `--json`. The response shape is always `{ items: [...] }`
 **Calculate MRR:**
 
 ```bash
-creem subs list --status active --json 2>/dev/null | jq '
+creem subs list --status active --json | jq '
   [.items[] | .product.price] | add / 100
 '
 # 125
@@ -95,7 +95,7 @@ creem subs list --status active --json 2>/dev/null | jq '
 **Revenue by product:**
 
 ```bash
-creem txn list --json 2>/dev/null | jq '
+creem txn list --json | jq '
   [.items[] | select(.status=="paid")]
   | group_by(.description)
   | map({
@@ -110,7 +110,7 @@ creem txn list --json 2>/dev/null | jq '
 **Customers by country:**
 
 ```bash
-creem customers list --json 2>/dev/null | jq '
+creem customers list --json | jq '
   [.items[] | .country]
   | group_by(.) | map({country: .[0], count: length})
   | sort_by(-.count)
@@ -120,7 +120,7 @@ creem customers list --json 2>/dev/null | jq '
 **High-value transactions (over $20):**
 
 ```bash
-creem txn list --json 2>/dev/null | jq '
+creem txn list --json | jq '
   [.items[] | select(.amount > 2000)]
   | map({id: .id, amount: (.amount/100), status: .status})
 '
@@ -129,7 +129,7 @@ creem txn list --json 2>/dev/null | jq '
 **Product pricing table (tab-separated for spreadsheets):**
 
 ```bash
-creem products list --json 2>/dev/null | jq -r '
+creem products list --json | jq -r '
   .items[] | [.name, "$\(.price/100)", .billingPeriod] | @tsv
 '
 # Starter    $9     every-month
@@ -141,7 +141,7 @@ creem products list --json 2>/dev/null | jq -r '
 **Find all past-due subscriptions with customer emails:**
 
 ```bash
-creem subs list --status past_due --json 2>/dev/null | jq '
+creem subs list --status past_due --json | jq '
   .items[] | {sub: .id, email: .customer.email, product: .product.name, since: .currentPeriodEndDate}
 '
 ```
@@ -149,9 +149,9 @@ creem subs list --status past_due --json 2>/dev/null | jq '
 **Bulk generate checkout links for all products:**
 
 ```bash
-creem products list --json 2>/dev/null | jq -r '.items[] | .id' | while read pid; do
-  URL=$(creem checkouts create --product "$pid" --success-url "https://myapp.com/thanks" --json 2>/dev/null | jq -r '.checkoutUrl')
-  NAME=$(creem products get "$pid" --json 2>/dev/null | jq -r '.name')
+creem products list --json | jq -r '.items[] | .id' | while read pid; do
+  URL=$(creem checkouts create --product "$pid" --success-url "https://myapp.com/thanks" --json | jq -r '.checkoutUrl')
+  NAME=$(creem products get "$pid" --json | jq -r '.name')
   echo "$NAME: $URL"
 done
 ```
@@ -161,8 +161,8 @@ done
 ```bash
 #!/bin/bash
 # Add to crontab: 0 9 * * * ~/daily-revenue.sh
-REVENUE=$(creem txn list --json 2>/dev/null | jq '[.items[] | select(.status=="paid") | .amount] | add / 100')
-SUBS=$(creem subs list --status active --json 2>/dev/null | jq '.items | length')
+REVENUE=$(creem txn list --json | jq '[.items[] | select(.status=="paid") | .amount] | add / 100')
+SUBS=$(creem subs list --status active --json | jq '.items | length')
 echo "$(date +%Y-%m-%d) | Revenue: \$$REVENUE | Active subs: $SUBS" >> ~/creem-daily.log
 ```
 
@@ -170,7 +170,7 @@ echo "$(date +%Y-%m-%d) | Revenue: \$$REVENUE | Active subs: $SUBS" >> ~/creem-d
 
 ```bash
 for status in active trialing past_due paused canceled; do
-  COUNT=$(creem subs list --status $status --json 2>/dev/null | jq '.items | length')
+  COUNT=$(creem subs list --status $status --json | jq '.items | length')
   echo "$status: $COUNT"
 done
 ```

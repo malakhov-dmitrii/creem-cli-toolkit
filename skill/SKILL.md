@@ -84,18 +84,18 @@ creem migrate lemon-squeezy --exclude-discounts # Skip discounts
 - All amounts are in **minor units** (cents): 2900 = $29.00
 - Test keys start with `creem_test_`, live keys with `creem_`
 - Default environment is `test` — always verify with `creem whoami`
-- Use `--json 2>/dev/null` to suppress spinner text in scripts
+- Use `--json` to suppress spinner text in scripts
 - Never expose API keys in chat or logs
 
 ## jq Patterns
 
 ```bash
 # MRR
-creem subs list --status active --json 2>/dev/null | jq '[.items[] | .product.price] | add / 100'
+creem subs list --status active --json | jq '[.items[] | .product.price] | add / 100'
 
 # Pricing table
-creem products list --json 2>/dev/null | jq -r '.items[] | [.name, "$\(.price/100)", .billingPeriod] | @tsv'
+creem products list --json | jq -r '.items[] | [.name, "$\(.price/100)", .billingPeriod] | @tsv'
 
 # Checkout link to clipboard
-creem checkouts create --product <id> --success-url <url> --json 2>/dev/null | jq -r '.checkoutUrl' | pbcopy
+creem checkouts create --product <id> --success-url <url> --json | jq -r '.checkoutUrl' | pbcopy
 ```

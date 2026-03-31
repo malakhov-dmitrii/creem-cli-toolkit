@@ -1,6 +1,6 @@
 #!/bin/bash
 # Revenue breakdown by product
-creem txn list --json 2>/dev/null | jq '
+creem txn list --json | jq '
   [.items[] | select(.status=="paid")]
   | group_by(.description)
   | map({
