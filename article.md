@@ -6,9 +6,11 @@ tags: cli, saas, ai, tutorial
 cover_image:
 ---
 
-I manage a SaaS on [Creem](https://creem.io). I used to have the dashboard open all day. Now I don't open it at all.
+I manage a SaaS on [Creem](https://creem.io). I used to have the dashboard open all day — checking subscriptions, looking up failed payments, generating checkout links. Now I don't open it at all.
 
-The Creem CLI gives you three increasingly powerful ways to manage payments: direct commands, `--json | jq` pipelines for automation, and an MCP server that lets Claude or Cursor manage your store through natural language. Here's the full playbook.
+Last Tuesday at 11pm I got a Slack alert about a past-due subscription. Instead of opening a browser, logging in, and clicking through three screens, I typed `creem subs list --status past_due --json | jq '.items[] | {email: .customer.email, product: .product.name}'` and had the answer in 2 seconds. Then I paused the subscription, sent the customer an email, and went back to sleep. All from the terminal.
+
+The Creem CLI gives you three increasingly powerful ways to manage payments: direct commands for quick lookups, `--json | jq` pipelines for analytics and automation, and an MCP server that lets Claude or Cursor manage your store through natural language. Here's the full playbook — with a [ready-to-use toolkit repo](https://github.com/malakhov-dmitrii/creem-cli-toolkit) containing 9 shell scripts, MCP configs, and a Claude Code skill.
 
 ## Setup (2 minutes)
 
@@ -81,9 +83,11 @@ creem subs cancel sub_xxx --mode immediate  # Cancel now
 
 ## Level 2: `--json | jq` Pipelines
 
-Every command supports `--json`. The response shape is always `{ items: [...] }`. This makes the CLI fully composable with jq, shell scripts, and cron.
+Every command supports `--json`. The response shape is always `{ items: [...] }`. This makes the CLI fully composable with jq, shell scripts, and cron jobs.
 
-**Calculate MRR:**
+This is where the terminal approach starts beating the dashboard. You can't `GROUP BY product` in a web UI. You can't pipe dashboard results into a Slack webhook. You can't run your revenue report at 9am every day automatically. With `--json | jq`, all of that is one line.
+
+**Calculate MRR** — the number every SaaS founder checks first:
 
 ```bash
 creem subs list --status active --json | jq '
@@ -138,7 +142,7 @@ creem products list --json | jq -r '
 # Lifetime   $49    once
 ```
 
-**Find all past-due subscriptions with customer emails:**
+**Find all past-due subscriptions with customer emails** — this is the query I ran at 11pm on a Tuesday instead of opening the dashboard:
 
 ```bash
 creem subs list --status past_due --json | jq '
@@ -177,7 +181,9 @@ done
 
 ## Level 3: AI Agent via MCP Server
 
-This is where it gets wild. The `creem` npm package ships with an MCP server — 22 tools that any MCP-compatible AI agent can call directly via the Creem SDK (not shelling out to the CLI like some custom solutions).
+This is where it gets wild. The `creem` npm package ships with an MCP server — 22 tools that any MCP-compatible AI agent can call directly via the Creem SDK. This is not a wrapper that shells out to the CLI. The MCP server calls the Creem SDK directly, which means it can do things the CLI can't — create discounts, manage licenses, upgrade subscriptions.
+
+The key insight: other CLI-to-MCP solutions parse text output from shell commands. This one is SDK-native. The AI gets structured data and typed tool definitions, not string-munged terminal output.
 
 **Setup for Claude Code / Claude Desktop:**
 
@@ -272,6 +278,20 @@ The wizard maps your products, pricing, and billing periods. No CSV exports, no 
 
 Three interfaces, one payment platform. Use each where it's strongest.
 
+## Grab the Toolkit
+
+All the scripts, MCP configs, and the Claude Code skill from this article are packaged in a ready-to-use repo:
+
+```bash
+git clone https://github.com/malakhov-dmitrii/creem-cli-toolkit
+```
+
+What's inside:
+- **9 shell scripts** — MRR, revenue by product, sub health, checkout links, daily cron, bulk ops, past-due alerts, customers by country, pricing table
+- **MCP configs** — copy-paste JSON for Claude Code, Cursor, and Claude Desktop
+- **Claude Code skill** — `SKILL.md` with full CLI reference and safety rules (install via `clawhub install creem-cli-toolkit` or copy to `.claude/skills/`)
+- **Demo script** — step-through version of all 3 levels for live demos
+
 ## Get Started
 
 ```bash
@@ -281,6 +301,8 @@ creem products list
 ```
 
 Terminal to payments in 2 minutes. No dashboard required.
+
+**Video walkthrough:** [youtube.com/watch?v=td6hwGfLvxQ](https://youtu.be/td6hwGfLvxQ)
 
 ---
 
